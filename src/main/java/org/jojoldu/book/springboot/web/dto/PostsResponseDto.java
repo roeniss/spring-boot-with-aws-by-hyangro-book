@@ -1,14 +1,18 @@
 package org.jojoldu.book.springboot.web.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.jojoldu.book.springboot.domain.posts.Posts;
 
-@Value
+@Getter
+@AllArgsConstructor
 public class PostsResponseDto {
-    Long id;
-    String title;
-    String content;
-    String author;
+    private Long id;
+    private String title;
+    private String content;
+    private String author;
 
     public PostsResponseDto(Posts posts) {
         this.id = posts.getId();

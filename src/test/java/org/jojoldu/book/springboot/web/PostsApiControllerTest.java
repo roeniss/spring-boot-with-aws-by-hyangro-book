@@ -3,13 +3,13 @@ package org.jojoldu.book.springboot.web;
 import org.assertj.core.api.Assertions;
 import org.jojoldu.book.springboot.domain.posts.Posts;
 import org.jojoldu.book.springboot.domain.posts.PostsRepository;
+import org.jojoldu.book.springboot.web.dto.PostsResponseDto;
 import org.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
 import org.jojoldu.book.springboot.web.dto.PostsUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 
 @RunWith(SpringRunner.class)
@@ -63,9 +61,9 @@ public class PostsApiControllerTest {
     @Test
     public void update_single_Posts() {
         //given
-       Posts savedPosts =  postsRepository.save(Posts.builder().title("title").content("content").author("author").build());
+        Posts savedPosts = postsRepository.save(Posts.builder().title("title").content("content").author("author").build());
 
-        Long  updatedId = savedPosts.getId();
+        Long updatedId = savedPosts.getId();
         String expectedTitle = "title2";
         String expectedContent = "content2";
         PostsUpdateRequestDto requestDto = PostsUpdateRequestDto.builder().title(expectedTitle).content(expectedContent).build();
@@ -81,5 +79,26 @@ public class PostsApiControllerTest {
         List<Posts> all = postsRepository.findAll();
         Assertions.assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
         Assertions.assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
+    }
+
+    @Test
+    public void find_single_Posts() {
+        //given
+        String title = "title";
+        String content = "content";
+        String author = "author";
+        Posts savedPosts = postsRepository.save(Posts.builder().title(title).content(content).author(author).build());
+
+        Long id = savedPosts.getId();
+        String url = "http://localhost:" + port + "/api/v1/posts/" + id;
+
+        //when
+        ResponseEntity<PostsResponseDto> responseEntity = restTemplate.getForEntity(url, PostsResponseDto.class);
+
+        //then
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody().getTitle()).isEqualTo(title);
+        Assertions.assertThat(responseEntity.getBody().getContent()).isEqualTo(content);
+        Assertions.assertThat(responseEntity.getBody().getAuthor()).isEqualTo(author);
     }
 }
