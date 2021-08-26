@@ -6,6 +6,7 @@ import org.jojoldu.book.springboot.domain.posts.PostsRepository;
 import org.jojoldu.book.springboot.web.HelloController;
 import org.jojoldu.book.springboot.web.dto.PostsListResponseDto;
 import org.jojoldu.book.springboot.web.dto.PostsResponseDto;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,11 @@ public class PostsServiceTest {
     PostsService postsService;
     @Autowired
     PostsRepository postsRepository;
+
+    @After
+    public void cleanup() throws Exception{
+        postsRepository.deleteAll();
+    }
 
     @Test
     public void find_multiple_posts_order_by_modifiedDate_desc() {
