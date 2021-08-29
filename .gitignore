@@ -2,3 +2,19 @@
 .idea
 build
 application-oauth.properties
+application-real-db.properties
+
+# terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+terraform-for-aws/key*
