@@ -77,7 +77,7 @@ resource "aws_security_group" "all" {
   ingress {
     from_port   = 0
     to_port     = 0
-    protocol    = "tcp"
+    protocol    = "all"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -169,8 +169,32 @@ resource "aws_db_instance" "web_db" {
   password                = var.db_password
   parameter_group_name    = aws_db_parameter_group.web_db.name
   skip_final_snapshot     = true
+  publicly_accessible     = true
   vpc_security_group_ids = [
     aws_security_group.ssh_sg_to_db.id,
     aws_security_group.all.id # TODO: remove
   ]
+}
+
+resource "aws_iam_user" "cicd" {
+  name = "cicd"
+}
+
+resource "aws_iam_user_policy_attachment" "role-policy-attachment" {
+  for_each = toset([
+    "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+    "arn:aws:iam::aws:policy/AWSCodeDeployFullAccess"
+  ])
+
+  user       = aws_iam_user.cicd.name
+  policy_arn = each.value
+}
+
+resource "aws_s3_bucket" "cicd_jar_bucket" {
+  bucket = "cicd-jar-bucket"
+  acl    = "private"
+
+  tags = {
+    Name = "hyangro cicd jar bucket"
+  }
 }

@@ -17,4 +17,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-terraform-for-aws/key*
+terraform-for-aws/*key*
