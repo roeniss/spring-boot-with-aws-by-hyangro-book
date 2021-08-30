@@ -264,24 +264,11 @@ resource "aws_iam_role_policy_attachment" "AWSCodeDeployRole" {
   role       = aws_iam_role.web_deploy.name
 }
 
-resource "aws_codedeploy_deployment_config" "web_deploy" {
-  deployment_config_name = "hyangro-deployment-config"
-
-  minimum_healthy_hosts {
-    type  = "HOST_COUNT"
-    value = 1
-  }
-
-  traffic_routing_config {
-    type  = "AllAtOnce"
-  }
-}
-
 resource "aws_codedeploy_deployment_group" "web_deploy" {
   app_name              = aws_codedeploy_app.web_deploy.name
   deployment_group_name = "web-deploy-group"
   service_role_arn      = aws_iam_role.web_deploy.arn
-  deployment_config_name = aws_codedeploy_deployment_config.web_deploy.id
+  deployment_config_name = "CodeDeployDefault.AllAtOnce"
 
   ec2_tag_set {
     ec2_tag_filter {

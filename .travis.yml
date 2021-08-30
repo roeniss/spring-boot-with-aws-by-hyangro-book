@@ -38,6 +38,7 @@ deploy:
     secret_access_key: $AWS_SECRET_KEY
     bucket: cicd_jar_bucket
     key: webapp.zip
+    region: ap-northeast-2
     bundle_type: zip
     application: hyangro-web-deploy
     deployment_group: web-deploy-group
