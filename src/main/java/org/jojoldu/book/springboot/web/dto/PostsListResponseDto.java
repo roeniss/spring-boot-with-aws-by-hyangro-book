@@ -1,6 +1,5 @@
 package org.jojoldu.book.springboot.web.dto;
 
-import lombok.Getter;
 import lombok.Value;
 import org.jojoldu.book.springboot.domain.posts.Posts;
 

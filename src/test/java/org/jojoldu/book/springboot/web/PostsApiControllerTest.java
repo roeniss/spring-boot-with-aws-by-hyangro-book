@@ -6,10 +6,10 @@ import org.jojoldu.book.springboot.domain.posts.Posts;
 import org.jojoldu.book.springboot.domain.posts.PostsRepository;
 import org.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
 import org.jojoldu.book.springboot.web.dto.PostsUpdateRequestDto;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -18,7 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PostsApiControllerTest {
     @LocalServerPort
@@ -46,7 +46,7 @@ public class PostsApiControllerTest {
 
     private MockMvc mvc;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -54,7 +54,7 @@ public class PostsApiControllerTest {
                 .build();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         postsRepository.deleteAll();
     }

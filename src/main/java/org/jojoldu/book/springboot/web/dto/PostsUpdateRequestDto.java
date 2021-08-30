@@ -3,7 +3,6 @@ package org.jojoldu.book.springboot.web.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.jojoldu.book.springboot.domain.posts.Posts;
 
 @Getter
 @NoArgsConstructor

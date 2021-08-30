@@ -3,25 +3,17 @@ package org.jojoldu.book.springboot.service;
 import org.assertj.core.api.Assertions;
 import org.jojoldu.book.springboot.domain.posts.Posts;
 import org.jojoldu.book.springboot.domain.posts.PostsRepository;
-import org.jojoldu.book.springboot.web.HelloController;
 import org.jojoldu.book.springboot.web.dto.PostsListResponseDto;
-import org.jojoldu.book.springboot.web.dto.PostsResponseDto;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class PostsServiceTest {
     @Autowired
@@ -29,8 +21,8 @@ public class PostsServiceTest {
     @Autowired
     PostsRepository postsRepository;
 
-    @After
-    public void cleanup() throws Exception{
+    @AfterEach
+    public void cleanup() throws Exception {
         postsRepository.deleteAll();
     }
 
@@ -45,12 +37,12 @@ public class PostsServiceTest {
         postsRepository.save(Posts.builder().title(title3).content("content").author("author").build());
 
         //then
-        List<PostsListResponseDto> dtoList=  postsService.findAllDesc();
+        List<PostsListResponseDto> dtoList = postsService.findAllDesc();
 
         //then
-        Assertions.assertThat( dtoList.size()).isEqualTo(3);
-        Assertions.assertThat( dtoList.get(0).getTitle()).isEqualTo(title3);
-        Assertions.assertThat( dtoList.get(1).getTitle()).isEqualTo(title2);
-        Assertions.assertThat( dtoList.get(2).getTitle()).isEqualTo(title1);
+        Assertions.assertThat(dtoList.size()).isEqualTo(3);
+        Assertions.assertThat(dtoList.get(0).getTitle()).isEqualTo(title3);
+        Assertions.assertThat(dtoList.get(1).getTitle()).isEqualTo(title2);
+        Assertions.assertThat(dtoList.get(2).getTitle()).isEqualTo(title1);
     }
 }
