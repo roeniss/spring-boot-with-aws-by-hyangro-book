@@ -36,7 +36,7 @@ deploy:
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
-    bucket: cicd_jar_bucket
+    bucket: cicd-jar-bucket
     key: webapp.zip
     region: ap-northeast-2
     bundle_type: zip
