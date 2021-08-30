@@ -103,11 +103,12 @@ resource "aws_instance" "web_server" {
     aws_security_group.ssh.id,
   ]
   tags = {
-    Name = "향로 튜토리얼용"
+    Name = "향로"
   }
   root_block_device {
     volume_size = 30
   }
+  iam_instance_profile = aws_iam_instance_profile.web_server_profile.name
 }
 
 resource "aws_db_parameter_group" "web_db" {
@@ -196,5 +197,97 @@ resource "aws_s3_bucket" "cicd_jar_bucket" {
 
   tags = {
     Name = "hyangro cicd jar bucket"
+  }
+}
+
+resource "aws_iam_instance_profile" "web_server_profile" {
+  name = "test_profile"
+  role = aws_iam_role.web_server.name
+}
+
+resource "aws_iam_role" "web_server" {
+  name = "web-server-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+
+data "aws_iam_policy" "AmazonEC2RoleforAWSCodeDeploy" {
+  arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
+}
+
+resource "aws_iam_role_policy_attachment" "web_server_attach" {
+  role       = aws_iam_role.web_server.name
+  policy_arn = data.aws_iam_policy.AmazonEC2RoleforAWSCodeDeploy.arn
+}
+
+resource "aws_codedeploy_app" "web_deploy" {
+  compute_platform = "Server"
+  name             = "hyangro-web-deploy"
+}
+resource "aws_iam_role" "web_deploy" {
+  name = "web-deploy-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codedeploy.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "AWSCodeDeployRole" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+  role       = aws_iam_role.web_deploy.name
+}
+
+resource "aws_codedeploy_deployment_config" "web_deploy" {
+  deployment_config_name = "hyangro-deployment-config"
+
+  minimum_healthy_hosts {
+    type  = "HOST_COUNT"
+    value = 1
+  }
+
+  traffic_routing_config {
+    type  = "AllAtOnce"
+  }
+}
+
+resource "aws_codedeploy_deployment_group" "web_deploy" {
+  app_name              = aws_codedeploy_app.web_deploy.name
+  deployment_group_name = "web-deploy-group"
+  service_role_arn      = aws_iam_role.web_deploy.arn
+  deployment_config_name = aws_codedeploy_deployment_config.web_deploy.id
+
+  ec2_tag_set {
+    ec2_tag_filter {
+      key   = "Name"
+      type  = "KEY_AND_VALUE"
+      value = "향로"
+    }
   }
 }

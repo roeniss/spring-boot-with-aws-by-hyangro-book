@@ -32,3 +32,14 @@ deploy:
     acl: private
     local_dir: deploy
     wait-until-deployed: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: cicd_jar_bucket
+    key: webapp.zip
+    bundle_type: zip
+    application: hyangro-web-deploy
+    deployment_group: web-deploy-group
+    wait-until-deployed: true
+
