@@ -17,7 +17,7 @@ notifications:
     recipients:
       - roeniss2@gmail.com
 
- before_deploy:
+before_deploy:
    - zip -r webapp *
    - mkdir -p deploy
    - mv webapp.zip deploy/webapp.zip
