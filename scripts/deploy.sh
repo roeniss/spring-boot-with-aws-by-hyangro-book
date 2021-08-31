@@ -1,15 +1,15 @@
 #!/bin/bash
 
 REPOSITORY=/home/ec2-user/app/step2
-PROJECT_NAME=webapp
+PROJECT_NAME=hyangro
 
 echo "> Build 파일 복사"
 
-cp $REPOSITORY/zip/*.jar $REPOSITORY/
+cp $REPOSITORY/zip/build/libs/*.jar $REPOSITORY/
 
 echo "> 현재 구동중인 애플리케이션 pid 확인"
 
-CURRENT_PID=$(pgrep -fl freelec-springboot2-webservice | grep jar | awk '{print $1}')
+CURRENT_PID=$(pgrep java)
 
 echo "현재 구동중인 어플리케이션 pid: $CURRENT_PID"
 

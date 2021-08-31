@@ -18,9 +18,13 @@ notifications:
       - roeniss2@gmail.com
 
 before_deploy:
-   - zip -r webapp *
-   - mkdir -p deploy
-   - mv webapp.zip deploy/webapp.zip
+  - mkdir -p before-deploy
+  - cp scripts/*.sh before-deploy/
+  - cp appspec.yml before-deploy/
+  - cp build/libs/*.jar before-deploy/
+  - cd before-deploy && zip -r before-deploy && cd ..
+  - mkdir -p deploy
+  - mv before-deploy/before-deploy.zip deploy/webapp.zip
 
 deploy:
   - provider: s3
